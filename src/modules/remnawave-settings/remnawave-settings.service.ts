@@ -5,11 +5,16 @@ import { Injectable, Logger } from '@nestjs/common';
 import { RawCacheService } from '@common/raw-cache';
 import { fail, ok, TResult } from '@common/types';
 import { CACHE_KEYS, ERRORS } from '@libs/contracts/constants';
+import {
+    normalizeStealthLoginSettings,
+    stealthHasUnlockMethod,
+} from '@libs/contracts/models';
 
 import { UpdateRemnawaveSettingsRequestDto } from './dto';
 import { RemnawaveSettingsEntity } from './entities';
 import { RemnawaveSettingsRepository } from './repositories/remnawave-settings.repository';
 import { mergeOAuth2SecretsOnUpdate } from './utils/oauth2-secrets.util';
+import { mergeStealthLoginSecretsOnUpdate } from './utils/stealth-login-secrets.util';
 
 @Injectable()
 export class RemnawaveSettingsService {
@@ -40,10 +45,18 @@ export class RemnawaveSettingsService {
                 ? mergeOAuth2SecretsOnUpdate(body.oauth2Settings, settings.oauth2Settings)
                 : settings.oauth2Settings;
 
+            const mergedStealthLoginSettings = body.stealthLoginSettings
+                ? mergeStealthLoginSecretsOnUpdate(
+                      body.stealthLoginSettings,
+                      normalizeStealthLoginSettings(settings.stealthLoginSettings),
+                  )
+                : normalizeStealthLoginSettings(settings.stealthLoginSettings);
+
             const mergeSettings = new RemnawaveSettingsEntity({
                 ...settings,
                 ...body,
                 oauth2Settings: mergedOAuth2Settings,
+                stealthLoginSettings: mergedStealthLoginSettings,
             });
 
             const validationResult = await this.validateSettings(mergeSettings);
@@ -57,6 +70,9 @@ export class RemnawaveSettingsService {
             await this.remnawaveSettingsRepository.update({
                 ...body,
                 oauth2Settings: body.oauth2Settings ? mergedOAuth2Settings : undefined,
+                stealthLoginSettings: body.stealthLoginSettings
+                    ? mergedStealthLoginSettings
+                    : undefined,
             });
 
             await this.rawCacheService.del(CACHE_KEYS.REMNAWAVE_SETTINGS);
@@ -229,6 +245,14 @@ export class RemnawaveSettingsService {
                         error: `[Telegram OAuth2] At least one admin ID must be set in order to use Telegram OAuth2 authentication.`,
                     };
                 }
+            }
+
+            const stealthSettings = normalizeStealthLoginSettings(settings.stealthLoginSettings);
+            if (stealthSettings.enabled && !stealthHasUnlockMethod(stealthSettings)) {
+                return {
+                    valid: false,
+                    error: '[Stealth login] At least one unlock method must be enabled when stealth login is active.',
+                };
             }
 
             return {

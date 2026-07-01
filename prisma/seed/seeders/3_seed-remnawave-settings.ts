@@ -3,6 +3,7 @@ import consola from 'consola';
 
 import {
     DEFAULT_DATABASE_BACKUP_SETTINGS,
+    DEFAULT_STEALTH_LOGIN_SETTINGS,
     DEFAULT_TELEGRAM_NOTIFICATION_SETTINGS,
     Oauth2SettingsSchema,
     PasskeySettingsSchema,
@@ -79,6 +80,7 @@ export async function seedRemnawaveSettings(prisma: PrismaClient) {
         passwordSettings: DEFAULT_PASSWORD_AUTH_SETTINGS,
         telegramNotificationSettings: DEFAULT_TELEGRAM_NOTIFICATION_SETTINGS,
         databaseBackupSettings: DEFAULT_DATABASE_BACKUP_SETTINGS,
+        stealthLoginSettings: DEFAULT_STEALTH_LOGIN_SETTINGS,
     };
 
     const DEFAULT_BRANDING_SETTINGS: TBrandingSettings = {
@@ -137,6 +139,7 @@ export async function seedRemnawaveSettings(prisma: PrismaClient) {
                 brandingSettings: DEFAULT_BRANDING_SETTINGS,
                 telegramNotificationSettings: DEFAULT_TELEGRAM_NOTIFICATION_SETTINGS,
                 databaseBackupSettings: DEFAULT_DATABASE_BACKUP_SETTINGS,
+                stealthLoginSettings: DEFAULT_STEALTH_LOGIN_SETTINGS,
             },
         });
 

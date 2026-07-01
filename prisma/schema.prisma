@@ -45,10 +45,12 @@ model RemnawaveSettings {
   telegramNotificationSettings Json? @map("telegram_notification_settings")
   /// [DatabaseBackupSettings]
   databaseBackupSettings Json? @map("database_backup_settings")
-  /// [PanelStartedNotificationSettings]
-  panelStartedNotificationSettings Json? @map("panel_started_notification_settings")
+    /// [PanelStartedNotificationSettings]
+    panelStartedNotificationSettings Json? @map("panel_started_notification_settings")
+    /// [StealthLoginSettings]
+    stealthLoginSettings Json? @map("stealth_login_settings")
 
-  @@map("remnawave_settings")
+    @@map("remnawave_settings")
 }
 
 model Users {

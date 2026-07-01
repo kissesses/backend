@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Res, UseFilters, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Query, Res, UseFilters, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import {
@@ -131,8 +131,8 @@ export class AuthController {
         command: GetStatusCommand,
         httpCode: HttpStatus.OK,
     })
-    async getStatus(): Promise<GetStatusResponseDto> {
-        const result = await this.authService.getStatus();
+    async getStatus(@Query() query: Record<string, string>): Promise<GetStatusResponseDto> {
+        const result = await this.authService.getStatus(query);
 
         const data = errorHandler(result);
         return {

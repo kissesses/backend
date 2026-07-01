@@ -4,7 +4,10 @@ import {
     TPanelStartedNotificationSettings,
     TPasswordAuthSettings,
     TRemnawavePasskeySettings,
+    TStealthLoginSettings,
     mergePanelStartedNotificationSettingsForForm,
+    maskStealthLoginSettingsForResponse,
+    normalizeStealthLoginSettings,
 } from '@libs/contracts/models';
 
 import { RemnawaveSettingsEntity } from '../entities';
@@ -16,6 +19,7 @@ export class RemnawaveSettingsResponseModel {
     public passwordSettings: TPasswordAuthSettings;
     public brandingSettings: TBrandingSettings;
     public panelStartedNotificationSettings: TPanelStartedNotificationSettings;
+    public stealthLoginSettings: TStealthLoginSettings;
 
     constructor(entity: RemnawaveSettingsEntity) {
         this.passkeySettings = entity.passkeySettings;
@@ -24,6 +28,9 @@ export class RemnawaveSettingsResponseModel {
         this.brandingSettings = entity.brandingSettings;
         this.panelStartedNotificationSettings = mergePanelStartedNotificationSettingsForForm(
             entity.panelStartedNotificationSettings,
+        );
+        this.stealthLoginSettings = maskStealthLoginSettingsForResponse(
+            normalizeStealthLoginSettings(entity.stealthLoginSettings),
         );
     }
 }

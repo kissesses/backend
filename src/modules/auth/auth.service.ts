@@ -28,6 +28,7 @@ import {
     TOAuth2ProvidersKeys,
 } from '@libs/contracts/constants';
 import { ERRORS } from '@libs/contracts/constants/errors';
+import { buildStealthLoginPublicConfig } from '@libs/contracts/models';
 
 import { ServiceEvent } from '@integration-modules/notifications/interfaces';
 
@@ -226,10 +227,17 @@ export class AuthService {
         }
     }
 
-    public async getStatus(): Promise<TResult<GetStatusResponseModel>> {
+    public async getStatus(
+        query: Record<string, string> = {},
+    ): Promise<TResult<GetStatusResponseModel>> {
         try {
             const remnawaveSettings = await this.queryBus.execute(
                 new GetCachedRemnawaveSettingsQuery(),
+            );
+
+            const stealthLogin = buildStealthLoginPublicConfig(
+                remnawaveSettings.stealthLoginSettings,
+                query,
             );
 
             const adminCount = await this.getAdminCount();
@@ -242,6 +250,7 @@ export class AuthService {
                         isRegisterAllowed: false,
                         authentication: null,
                         branding: remnawaveSettings.brandingSettings,
+                        stealthLogin,
                     }),
                 );
             }
@@ -253,6 +262,7 @@ export class AuthService {
                         isRegisterAllowed: false,
                         authentication: null,
                         branding: remnawaveSettings.brandingSettings,
+                        stealthLogin,
                     }),
                 );
             }
@@ -264,6 +274,7 @@ export class AuthService {
                         isRegisterAllowed: true,
                         authentication: null,
                         branding: remnawaveSettings.brandingSettings,
+                        stealthLogin,
                     }),
                 );
             }
@@ -278,6 +289,7 @@ export class AuthService {
                         isRegisterAllowed: false,
                         authentication: null,
                         branding: remnawaveSettings.brandingSettings,
+                        stealthLogin,
                     }),
                 );
             }
@@ -311,6 +323,7 @@ export class AuthService {
                         },
                     },
                     branding: remnawaveSettings.brandingSettings,
+                    stealthLogin,
                 }),
             );
         } catch (error) {

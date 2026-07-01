@@ -7,6 +7,7 @@ import {
     BrandingSettingsSchema,
     TelegramNotificationSettingsSchema,
     PanelStartedNotificationSettingsSchema,
+    StealthLoginSettingsSchema,
 } from '@libs/contracts/models';
 
 declare global {
@@ -19,6 +20,7 @@ declare global {
         type PanelStartedNotificationSettings = z.infer<
             typeof PanelStartedNotificationSettingsSchema
         >;
+        type StealthLoginSettings = z.infer<typeof StealthLoginSettingsSchema>;
     }
 }
 

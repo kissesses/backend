@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { AUTH_ROUTES, REST_API } from '../../api';
 import { getEndpointDetails, OAUTH2_PROVIDERS } from '../../constants';
+import { StealthLoginPublicSchema } from '../../models';
 
 export namespace GetStatusCommand {
     export const url = REST_API.AUTH.GET_STATUS;
@@ -13,6 +14,10 @@ export namespace GetStatusCommand {
         'Get the status of the authentication',
         { scope: 'get-status', kind: 'read' },
     );
+
+    export const RequestQuerySchema = z.record(z.string(), z.string());
+
+    export type RequestQuery = z.infer<typeof RequestQuerySchema>;
 
     export const ResponseSchema = z.object({
         response: z.object({
@@ -35,6 +40,7 @@ export namespace GetStatusCommand {
                 title: z.nullable(z.string()),
                 logoUrl: z.nullable(z.string()),
             }),
+            stealthLogin: StealthLoginPublicSchema,
         }),
     });
 

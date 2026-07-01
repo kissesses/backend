@@ -6,6 +6,7 @@ import {
     TPanelStartedNotificationSettings,
     TPasswordAuthSettings,
     TRemnawavePasskeySettings,
+    TStealthLoginSettings,
 } from '@libs/contracts/models';
 
 export class RemnawaveSettingsEntity implements RemnawaveSettings {
@@ -15,6 +16,7 @@ export class RemnawaveSettingsEntity implements RemnawaveSettings {
     public passwordSettings: TPasswordAuthSettings;
     public brandingSettings: TBrandingSettings;
     public panelStartedNotificationSettings: TPanelStartedNotificationSettings | null;
+    public stealthLoginSettings: TStealthLoginSettings | null;
     public telegramNotificationSettings: RemnawaveSettings['telegramNotificationSettings'];
     public databaseBackupSettings: RemnawaveSettings['databaseBackupSettings'];
 

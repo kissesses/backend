@@ -1,4 +1,5 @@
 import { TOAuth2ProvidersKeys } from '@libs/contracts/constants';
+import { TStealthLoginPublic } from '@libs/contracts/models';
 
 interface IAuthentication {
     passkey: {
@@ -20,6 +21,7 @@ export class GetStatusResponseModel {
         title: string | null;
         logoUrl: string | null;
     };
+    public readonly stealthLogin: TStealthLoginPublic;
 
     constructor(data: {
         isLoginAllowed: boolean;
@@ -29,10 +31,12 @@ export class GetStatusResponseModel {
             title: string | null;
             logoUrl: string | null;
         };
+        stealthLogin: TStealthLoginPublic;
     }) {
         this.isLoginAllowed = data.isLoginAllowed;
         this.isRegisterAllowed = data.isRegisterAllowed;
         this.authentication = data.authentication;
         this.branding = data.branding;
+        this.stealthLogin = data.stealthLogin;
     }
 }

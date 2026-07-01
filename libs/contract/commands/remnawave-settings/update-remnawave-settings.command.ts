@@ -9,6 +9,7 @@ import {
     PasskeySettingsSchema,
     PasswordAuthSettingsSchema,
     RemnawaveSettingsSchema,
+    StealthLoginSettingsSchema,
 } from '../../models';
 
 export namespace UpdateRemnawaveSettingsCommand {
@@ -28,6 +29,7 @@ export namespace UpdateRemnawaveSettingsCommand {
         passwordSettings: PasswordAuthSettingsSchema.optional(),
         brandingSettings: BrandingSettingsSchema.optional(),
         panelStartedNotificationSettings: PanelStartedNotificationSettingsSchema.optional(),
+        stealthLoginSettings: StealthLoginSettingsSchema.optional(),
     });
 
     export type Request = z.infer<typeof RequestSchema>;
