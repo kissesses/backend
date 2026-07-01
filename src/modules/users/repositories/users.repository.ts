@@ -61,7 +61,15 @@ const USERS_FILTER_COLUMN_MAP = {
     nodeName: null,
 } as const;
 
-const NUMERIC_FILTER_IDS = new Set(['hwidDeviceLimit', 'tId', 'trafficLimitBytes']);
+const NUMERIC_FILTER_IDS = new Set([
+    'hwidDeviceLimit',
+    'tId',
+    'trafficLimitBytes',
+    'usedTrafficBytes',
+    'userTraffic.lifetimeUsedTrafficBytes',
+]);
+
+const RANGE_FILTER_IDS = new Set(['trafficLimitBytes', 'hwidDeviceLimit']);
 
 type AllowedUsersFilterId = keyof typeof USERS_FILTER_COLUMN_MAP;
 
@@ -281,7 +289,10 @@ export class UsersRepository {
                 continue;
             }
 
-            const mode = filterModes?.[filter.id] ?? 'contains';
+            const isRangeValue = Array.isArray(filter.value) && filter.value.length === 2;
+            const mode =
+                filterModes?.[filter.id] ??
+                (isRangeValue && RANGE_FILTER_IDS.has(filter.id) ? 'between' : 'contains');
 
             if (
                 ['createdAt', 'expireAt', 'lastTrafficResetAt', 'userTraffic.onlineAt'].includes(
@@ -393,7 +404,13 @@ export class UsersRepository {
                     break;
                 }
                 default:
-                    qb = qb.where(col, 'ilike', `%${value}%`);
+                    if (NUMERIC_FILTER_IDS.has(filter.id)) {
+                        if (!Number.isNaN(value)) {
+                            qb = qb.where(col, '=', value);
+                        }
+                    } else {
+                        qb = qb.where(col, 'ilike', `%${value}%`);
+                    }
             }
         }
 
